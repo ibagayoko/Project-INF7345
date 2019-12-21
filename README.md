@@ -4,9 +4,10 @@ Reproduce the results obtained by the authors of this paper [An Analytical Study
 
 ## Todo
 - [x] Write the ned file : Network Architecture (Generator, Base Station, Mobile Station)
-- [ ] Generator.cpp
+- [x] Generator.cpp
 - [ ] BaseStation.cpp 
 - [ ] MobileStation.cpp
+- [ ] omnetpp.ini 
 - [ ] Write Stats : finish() to recolte average delays, power saving factor
 
 - [ ] Find a way to get Analitics data
