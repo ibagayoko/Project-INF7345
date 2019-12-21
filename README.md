@@ -3,7 +3,7 @@ Reproduce the results obtained by the authors of this paper [An Analytical Study
 
 
 ## Todo
-- [ ] Write the ned file : Network Architecture (Generator, Base Station, Mobile Station)
+- [x] Write the ned file : Network Architecture (Generator, Base Station, Mobile Station)
 - [ ] Generator.cpp
 - [ ] BaseStation.cpp 
 - [ ] MobileStation.cpp
