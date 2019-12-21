@@ -26,7 +26,7 @@ simple Generator
 }
 
 
-simple BaseSatation
+simple BaseStation
 {
     parameters:
         
@@ -59,7 +59,7 @@ network MG1
         generator: Generator {
             @display("p=46,113");
         }
-        BS: BaseSatation {
+        BS: BaseStation {
             @display("p=172,113");
         }
 
