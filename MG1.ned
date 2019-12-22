@@ -37,7 +37,7 @@ simple BaseStation
         inout gate; // Input/ Output du Mobile divice.
 }
 
-simple MobileStattion
+simple MobileStation
 {
     parameters:
         // PARETO DISTRIBUTION PARAMS
@@ -63,7 +63,7 @@ network MG1
             @display("p=172,113");
         }
 
-        MS: MobileStattion {
+        MS: MobileStation {
             @display("p=340,113");
         }
 

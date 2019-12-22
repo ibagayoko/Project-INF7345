@@ -6,7 +6,7 @@ Reproduce the results obtained by the authors of this paper [An Analytical Study
 - [x] Write the ned file : Network Architecture (Generator, Base Station, Mobile Station)
 - [x] Generator.cpp
 - [x] BaseStation.cpp 
-- [-] MobileStation.cpp
+- [x] MobileStation.cpp
 - [ ] omnetpp.ini 
 - [ ] Write Stats : finish() to recolte average delays, power saving factor
 
@@ -15,8 +15,10 @@ Reproduce the results obtained by the authors of this paper [An Analytical Study
 
 
 ## Plots 
-- [ ] Power Saving Factor
-- [ ] Average Packet Transmission delays
+- [ ] Power Saving Factor (Sim)
+- [ ] Power Saving Factor (Ana)
+- [ ] Average Packet Transmission delays (Sim)
+- [ ] Average Packet Transmission delays (Ana)
 
 ## Good to know
 - Arriaval as Exponatial distribution

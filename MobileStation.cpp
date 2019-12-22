@@ -28,8 +28,8 @@ private:
 protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
-    virtual void transmissionDelay();
-    virtual void getSleepWindow();
+    virtual simtime_t transmissionDelay();
+    virtual simtime_t getSleepWindow();
 
 };
 
@@ -38,6 +38,9 @@ Define_Module(MobileStation);
 MobileStation::MobileStation(){}
 
 MobileStation::~MobileStation(){}
+void MobileStation::initialize(){
+    scheduleAt(par("sleepCycle").doubleValue(), new cMessage(READY_MSG_NAME));
+}
 
 simtime_t MobileStation::transmissionDelay(){
     double U = uniform(0., 1.);
@@ -51,35 +54,44 @@ simtime_t MobileStation::transmissionDelay(){
     return x;
 }
 
+/**
+ * Get the remind time in a sleep cycle after listening window
+ *
+ */
+simtime_t MobileStation::getSleepWindow(){
+    simtime_t t = simTime();
+    simtime_t Tc = par("sleepCycle").doubleValue();
+    long n = floor(t) / Tc;
+    return t - n*Tc;
+}
 void MobileStation::handleMessage(cMessage *msg){
     string msgName = string(msg->getName());
 
-    switch (msgName){
-
-        case EMPTY_MSG_NAME : {
+    if (msgName ==  EMPTY_MSG_NAME) {
             // Go to sleep
             //  We need to find the reminder time of sleep cycle to sleep
             // Tl = simtime() - awakeTime
             // Tc from parameters
             // Ts = Tc - Tl
-            break;
+
+            simtime_t transTime = getSleepWindow();
+            scheduleAt(simTime()+transTime, new cMessage(READY_MSG_NAME));
+
+
         }
-        case READY_MSG_NAME: {
+        if(msgName == READY_MSG_NAME) {
             // Let BS know I am ready to receive new Packets
             send(msg, "gate$o");
-            break;
+
         }
-        case PACKET_MSG_NAME: {
+        if( msgName == PACKET_MSG_NAME ){
             // New Packet has arrived
             // Todo : collect stats
             simtime_t transTime = transmissionDelay();
             scheduleAt(simTime()+transTime, new cMessage(READY_MSG_NAME));
 
-            break;
         }
 
-        default :
-            break;
 
-    }
+
 }
