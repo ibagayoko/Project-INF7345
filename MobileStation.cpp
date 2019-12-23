@@ -49,6 +49,9 @@ void MobileStation::initialize(){
     delayHist.setName("OverallDelays");
 }
 
+/**
+ * Service Time 
+ */
 simtime_t MobileStation::transmissionDelay(){
     double U = uniform(0., 1.);
     double H = par("higherBound");
