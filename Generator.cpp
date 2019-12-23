@@ -26,6 +26,7 @@ private:
 protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+    virtual simtime_t getNextArrivalTime();
 };
 
 
@@ -42,7 +43,7 @@ Generator::Generator(){
 
 void Generator::initialize(){
     sendMsgEvent = new cMessage("Creation de packet");
-    scheduleAt(par("interArrivalTime"),  sendMsgEvent);
+    scheduleAt(0.0,  sendMsgEvent);
 }
 
 void Generator::handleMessage(cMessage *msg){
@@ -51,10 +52,13 @@ void Generator::handleMessage(cMessage *msg){
     send(pkt, "out");
 
     // On prevoit un le prochain message
-    simtime_t next_departure_time = simTime() + par("interArrivalTime");
-    scheduleAt(next_departure_time, sendMsgEvent);
+    //simtime_t next_departure_time = simTime() + par("interArrivalTime");
+    scheduleAt(getNextArrivalTime(), sendMsgEvent);
 
 }
 
 
+simtime_t Generator::getNextArrivalTime(){
+    return simTime() +  exponential(1./par("lambda").doubleValue()) ;
+}
 

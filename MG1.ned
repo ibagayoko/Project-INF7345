@@ -17,7 +17,7 @@
 simple Generator
 {
     parameters:
-        volatile double interArrivalTime;
+        double lambda;
         @display("i=block/source");
 
     gates:
@@ -44,9 +44,11 @@ simple MobileStation
         double higherBound = default(4);
         double lowerBound = default(1);
         double alpha = default(2);
+        double lambda;
         
         
-        double sleepCycle = default(20);
+        
+        double sleepCycle; // @unit(ms) ;
         @display("i=device/cellphone");
     gates:
         inout gate; // Input/Ouput du Base stattion.

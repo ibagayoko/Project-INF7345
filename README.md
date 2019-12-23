@@ -7,18 +7,18 @@ Reproduce the results obtained by the authors of this paper [An Analytical Study
 - [x] Generator.cpp
 - [x] BaseStation.cpp 
 - [x] MobileStation.cpp
-- [ ] omnetpp.ini 
-- [ ] Write Stats : finish() to recolte average delays, power saving factor
+- [x] omnetpp.ini 
+- [x] Write Stats : finish() to recolte average delays, power saving factor
 
-- [ ] Find a way to get Analitics data
+- [x] Find a way to get Analitics data
 
 
 
 ## Plots 
 - [ ] Power Saving Factor (Sim)
 - [ ] Power Saving Factor (Ana)
-- [ ] Average Packet Transmission delays (Sim)
-- [ ] Average Packet Transmission delays (Ana)
+- [x] Average Packet Transmission delays (Sim)
+- [x] Average Packet Transmission delays (Ana)
 
 ## Good to know
 - Arriaval as Exponatial distribution

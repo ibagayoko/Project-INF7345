@@ -1,14 +1,17 @@
 /*
  * MobileStation.cpp
  *
- *  Created on: 21 déc. 2019
+ *  Created on: 21 dï¿½c. 2019
  *      Author: Ismail Bagayoko
  */
 
 
 #include <iostream>
 #include <cstring>
+#include <fstream>
 #include <omnetpp.h>
+
+
 
 #define PACKET_MSG_NAME "packet"
 #define READY_MSG_NAME "ready"
@@ -23,11 +26,13 @@ public:
     MobileStation();
      ~MobileStation();
 private:
+     cDoubleHistogram delayHist;
 
 
 protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
     virtual simtime_t transmissionDelay();
     virtual simtime_t getSleepWindow();
 
@@ -39,7 +44,9 @@ MobileStation::MobileStation(){}
 
 MobileStation::~MobileStation(){}
 void MobileStation::initialize(){
-    scheduleAt(par("sleepCycle").doubleValue(), new cMessage(READY_MSG_NAME));
+    scheduleAt(par("sleepCycle"), new cMessage(READY_MSG_NAME));
+
+    delayHist.setName("OverallDelays");
 }
 
 simtime_t MobileStation::transmissionDelay(){
@@ -59,10 +66,15 @@ simtime_t MobileStation::transmissionDelay(){
  *
  */
 simtime_t MobileStation::getSleepWindow(){
-    simtime_t t = simTime();
-    simtime_t Tc = par("sleepCycle").doubleValue();
+
+    simtime_t Tc = par("sleepCycle");///.doubleValueInUnit("ms");
+    simtime_t t = simTime() ;
     long n = floor(t) / Tc;
-    return t - n*Tc;
+
+
+
+    EV << "n = " << n <<endl;
+    return Tc- ( t - n*Tc);
 }
 void MobileStation::handleMessage(cMessage *msg){
     string msgName = string(msg->getName());
@@ -74,10 +86,9 @@ void MobileStation::handleMessage(cMessage *msg){
             // Tc from parameters
             // Ts = Tc - Tl
 
-            simtime_t transTime = getSleepWindow();
-            scheduleAt(simTime()+transTime, new cMessage(READY_MSG_NAME));
-
-
+            simtime_t sleepWindow = getSleepWindow();
+            scheduleAt(simTime()+sleepWindow, new cMessage(READY_MSG_NAME));
+            delete msg;
         }
         if(msgName == READY_MSG_NAME) {
             // Let BS know I am ready to receive new Packets
@@ -88,10 +99,33 @@ void MobileStation::handleMessage(cMessage *msg){
             // New Packet has arrived
             // Todo : collect stats
             simtime_t transTime = transmissionDelay();
-            scheduleAt(simTime()+transTime, new cMessage(READY_MSG_NAME));
+
+            simtime_t endTime = simTime()+transTime;
+            scheduleAt(endTime, new cMessage(READY_MSG_NAME));
+            simtime_t overallDelay = endTime - msg->getCreationTime();
+
+            // Record delay
+            delayHist.collect(overallDelay);
+            delete msg;
 
         }
 
+}
+
+/**
+ * Exportation des valeurs pour Latex pgfplots
+ */
+
+void MobileStation::finish(){
+
+        EV << "Overall Delay, mean: " << delayHist.getMean()  << endl;
+
+        EV << endl;
+
+        ofstream dout ("output/delay-0." + to_string(int(par("lambda").doubleValue())) +  ".dat", ios::out | ios::app );
+
+        dout<<"(" <<par("sleepCycle").doubleValue() << ", " << delayHist.getMean()<< ")";
 
 
+        recordScalar("delay", delayHist.getMean());
 }
